@@ -13,7 +13,7 @@
 function openReturn(order, lines) {
   if (order.deliveredAt) {
     const deliveredAt = new Date(order.deliveredAt);
-    const now = new Date();
+    const now = new Date(order.deliveredAt);
 
     const diffMs = now - deliveredAt;
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
