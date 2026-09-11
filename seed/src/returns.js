@@ -14,6 +14,10 @@ function openReturn(order, lines) {
   if (lines.length === 0) {
     throw new Error('a return must cover at least one line');
   }
+  const returnableLines = lines.filter((line) => !line.finalClearance);
+  if (returnableLines.length ==0){
+    throw new Error('cannot open a return');
+  }
 
   return {
     orderId: order.id,
