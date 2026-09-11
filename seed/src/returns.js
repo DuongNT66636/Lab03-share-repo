@@ -15,6 +15,22 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
 
+  for (const line of lines) {
+    const orderedLine = order.lines.find(
+      (orderLine) => orderLine.sku === line.sku
+    );
+
+    if (!orderedLine) {
+      throw new Error(`SKU ${line.sku} was not found on the order`);
+    }
+
+    if (line.quantity > orderedLine.quantity) {
+      throw new Error(
+        `SKU ${line.sku}: cannot return ${line.quantity} units when only ${orderedLine.quantity} were ordered`
+      );
+    }
+  }
+
   return {
     orderId: order.id,
     lines,
