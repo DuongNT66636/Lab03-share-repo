@@ -11,6 +11,18 @@
  * @returns {object} the new return request
  */
 function openReturn(order, lines) {
+  if (order.deliveredAt) {
+    const deliveredAt = new Date(order.deliveredAt);
+    const now = new Date();
+
+    const diffMs = now - deliveredAt;
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    if (diffDays > 30) {
+      throw new Error("Return refused: outside the 30-day return window");
+    }
+  }
+
   if (lines.length === 0) {
     throw new Error('a return must cover at least one line');
   }
