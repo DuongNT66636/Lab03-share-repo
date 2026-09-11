@@ -15,13 +15,13 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
   const returnableLines = lines.filter((line) => !line.finalClearance);
-  if (returnableLines.length ==0){
-    throw new Error('cannot open a return');
+  if (returnableLines.length === 0){
+   throw new Error('cannot open a return: all lines are final clearance');
   }
 
   return {
     orderId: order.id,
-    lines,
+    lines: returnableLines,
     raisedAt: new Date().toISOString(),
     approvedBy: null,
     approvedAt: null,
