@@ -14,6 +14,15 @@ function openReturn(order, lines) {
   if (lines.length === 0) {
     throw new Error('a return must cover at least one line');
   }
+  for (const line of lines) {
+  const orderedLine = order.lines.find(
+    (orderLine) => orderLine.sku === line.sku
+  );
+
+  if (!orderedLine) {
+    throw new Error(`SKU ${line.sku} was not found on the order`);
+  }
+}
   const returnableLines = lines.filter((line) => !line.finalClearance);
   if (returnableLines.length == 0){
    throw new Error('cannot open a return: all lines are final clearance');
