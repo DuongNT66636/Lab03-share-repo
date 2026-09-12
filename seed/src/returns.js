@@ -20,9 +20,32 @@ function openReturn(order, lines, user) {
     throw new Error('a return must cover at least one line');
   }
 
+  for (const line of lines) {
+    const orderedLine = order.lines.find(
+      (orderLine) => orderLine.sku === line.sku
+    );
+
+    if (!orderedLine) {
+      throw new Error(`SKU ${line.sku} was not found on the order`);
+    }
+
+    if (line.quantity > orderedLine.quantity) {
+      throw new Error(
+        `SKU ${line.sku}: cannot return ${line.quantity} units when only ${orderedLine.quantity} were ordered`
+      );
+    }
+  }
+
+  const returnableLines = lines.filter((line) => !line.finalClearance);
+  if (returnableLines.length === 0) {
+    throw new Error('cannot open a return: all lines are final clearance');
+  }
+
+  // Keep the filtered lines from main while recording the authorized staff member,
+  // so final-clearance, quantity, and staff-authorization rules all remain enforced.
   return {
     orderId: order.id,
-    lines,
+    lines: returnableLines,
     raisedBy: user.id,
     raisedAt: new Date().toISOString(),
     approvedBy: null,
