@@ -22,6 +22,11 @@ function openReturn(order, lines) {
   if (!orderedLine) {
     throw new Error(`SKU ${line.sku} was not found on the order`);
   }
+  if (line.quantity > orderedLine.quantity) {
+  throw new Error(
+    `SKU ${line.sku}: cannot return ${line.quantity} units when only ${orderedLine.quantity} were ordered`
+  );
+}
 }
   const returnableLines = lines.filter((line) => !line.finalClearance);
   if (returnableLines.length == 0){
